@@ -1,6 +1,9 @@
 """Just test out different models."""
 
 from transformers import GPT2LMHeadModel, AutoTokenizer
+import os
+import torch
+import torch.nn.functional as F
 
 
 
@@ -30,7 +33,7 @@ def compute_surprisal(model, tokenizer, text):
 
 
 
- for model_dir in sorted(os.listdir(outputs_root)):
+for model_dir in sorted(os.listdir(outputs_root)):
     full_model_path = os.path.join(outputs_root, model_dir)
     if not os.path.isdir(full_model_path):
         continue
