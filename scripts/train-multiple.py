@@ -24,7 +24,7 @@ def train_model(model_config_dict, training_config, run_name):
 
     # Load tokenizer
     ### For now, use pre-traiend Spanish GPT-2 tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("dccuchile/gpt2-spanish")
+    tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
     # tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
     # Add custom padtoken 
