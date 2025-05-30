@@ -7,6 +7,13 @@ import torch.nn.functional as F
 
 
 
+
+### Set device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+
+
 #### Outputs root
 outputs_root = "scripts/outputs"
 
