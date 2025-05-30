@@ -18,7 +18,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 outputs_root = "scripts/outputs"
 
 ### Test text
-input_text = "The man went for a walk."
+input_text = "El hombre fue guapo."
 
 
 def compute_surprisal(model, tokenizer, text):
