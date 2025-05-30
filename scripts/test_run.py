@@ -38,6 +38,23 @@ def compute_surprisal(model, tokenizer, text):
     return surprisals[0].tolist(), tokenizer.convert_ids_to_tokens(targets[0])
 
 
+def count_parameters(model):
+    """credit: https://stackoverflow.com/questions/49201236/check-the-total-number-of-parameters-in-a-pytorch-model"""
+    
+    total_params = 0
+    for name, parameter in model.named_parameters():
+        
+        # if the param is not trainable, skip it
+        if not parameter.requires_grad:
+            continue
+        
+        # otherwise, count it towards your number of params
+        params = parameter.numel()
+        total_params += params
+    # print(f"Total Trainable Params: {total_params}")
+    
+    return total_params
+
 
 
 for model_dir in sorted(os.listdir(outputs_root)):
@@ -46,6 +63,9 @@ for model_dir in sorted(os.listdir(outputs_root)):
         continue
 
     print(f"\n=== Model: {model_dir} ===")
+
+    num_params = count_parameters(count_parameters)
+    print("Number of parameters: " + str(num_params))
     for checkpoint in sorted(os.listdir(full_model_path)):
         ckpt_path = os.path.join(full_model_path, checkpoint)
         if not os.path.isdir(ckpt_path) or not checkpoint.startswith("checkpoint-"):
