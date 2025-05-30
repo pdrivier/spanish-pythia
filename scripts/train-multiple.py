@@ -127,6 +127,7 @@ def main():
         {"n_layer": 1, "n_head": 4, "n_embd": 512},
         {"n_layer": 2, "n_head": 4, "n_embd": 512},
         {"n_layer": 1, "n_head": 8, "n_embd": 512},
+        {"n_layer": 4, "n_head": 4, "n_embd": 512},
     ]
 
     for i, variant in enumerate(model_variants):
