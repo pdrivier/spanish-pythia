@@ -1,0 +1,7 @@
+pip install 
+
+transformers
+datasets
+deepspeed
+pyyaml
+accelerate

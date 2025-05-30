@@ -1,0 +1,13 @@
+model_type: GPT2
+n_layer: 1
+n_head: 4
+n_embd: 768
+vocab_size: 50257
+max_position_embeddings: 1024
+resid_pdrop: 0.1
+embd_pdrop: 0.1
+attn_pdrop: 0.1
+layer_norm_epsilon: 1e-5
+initializer_range: 0.02
+bos_token_id: 0
+eos_token_id: 1
