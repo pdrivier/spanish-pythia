@@ -9,6 +9,8 @@ from torch.utils.data import IterableDataset, DataLoader
 from transformers import GPT2Config, GPT2LMHeadModel, Trainer, TrainingArguments, DataCollatorForLanguageModeling, get_scheduler
 from datasets import load_dataset
 from transformers import AutoTokenizer
+from transformers import PreTrainedTokenizerFast
+
 
 def train_model(model_config_dict, training_config, run_name):
     # Set device
@@ -19,10 +21,9 @@ def train_model(model_config_dict, training_config, run_name):
     model = GPT2LMHeadModel(config).to(device)
 
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
+    tokenizer = AutoTokenizer.from_pretrained("spanish_tokenizer")
 
     # Add custom padtoken 
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer))
     model.config.pad_token_id = tokenizer.pad_token_id
 
@@ -132,7 +133,6 @@ def main():
         {"n_layer": 1, "n_head": 4, "n_embd": 512},
         {"n_layer": 2, "n_head": 4, "n_embd": 512},
         {"n_layer": 1, "n_head": 8, "n_embd": 512},
-        {"n_layer": 4, "n_head": 4, "n_embd": 512},
     ]
 
     # Specify number of seeds per variant to run
@@ -141,6 +141,7 @@ def main():
     for i, variant in enumerate(model_variants):
         
         for s in range(num_seeds):
+
           # Set a different seed per variant
           seed = random.randint(0, 10000) 
           set_seed(seed)
