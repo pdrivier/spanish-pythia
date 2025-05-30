@@ -19,7 +19,7 @@ def train_model(model_config_dict, training_config, run_name):
     model = GPT2LMHeadModel(config).to(device)
 
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
 
     # Add custom padtoken 
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -132,6 +132,7 @@ def main():
         {"n_layer": 1, "n_head": 4, "n_embd": 512},
         {"n_layer": 2, "n_head": 4, "n_embd": 512},
         {"n_layer": 1, "n_head": 8, "n_embd": 512},
+        {"n_layer": 4, "n_head": 4, "n_embd": 512},
     ]
 
     # Specify number of seeds per variant to run
