@@ -64,8 +64,7 @@ for model_dir in sorted(os.listdir(outputs_root)):
 
     print(f"\n=== Model: {model_dir} ===")
 
-    num_params = count_parameters(count_parameters)
-    print("Number of parameters: " + str(num_params))
+
     for checkpoint in sorted(os.listdir(full_model_path)):
         ckpt_path = os.path.join(full_model_path, checkpoint)
         if not os.path.isdir(ckpt_path) or not checkpoint.startswith("checkpoint-"):
@@ -75,6 +74,10 @@ for model_dir in sorted(os.listdir(outputs_root)):
         model = GPT2LMHeadModel.from_pretrained(ckpt_path).to(device)
         tokenizer = AutoTokenizer.from_pretrained(ckpt_path)
         model.eval()
+
+        # Count params
+        num_params = count_parameters(model)
+        print("Number of parameters: " + str(num_params))
 
         # Do generation (optional)
         gen_inputs = tokenizer(input_text, return_tensors="pt").to(device)
