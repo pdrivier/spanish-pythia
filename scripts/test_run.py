@@ -18,7 +18,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 outputs_root = "scripts/outputs"
 
 ### Test text
-input_text = "El hombre fue guapo."
+input_text = "Había una vez"
 
 
 def compute_surprisal(model, tokenizer, text):
@@ -65,8 +65,8 @@ for model_dir in sorted(os.listdir(outputs_root)):
         # Compute surprisal
         surprisals, tokens = compute_surprisal(model, tokenizer, input_text)
 
+        mean_surprisal = sum(surprisals) / len(surprisals)
+
         print(f"\n-- {checkpoint} --")
         print(f"Generated: {decoded}")
-        print("Surprisal per token:")
-        for tok, s in zip(tokens, surprisals):
-            print(f"{tok:>10}: {s:.2f}")
+        print(f"Mean surprisal: {mean_surprisal:.2f}")
