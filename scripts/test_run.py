@@ -56,7 +56,19 @@ def count_parameters(model):
     return total_params
 
 
+def extract_step(checkpoint_name):
+    match = re.search(r"checkpoint-(\d+)", checkpoint_name)
+    return int(match.group(1)) if match else -1
 
+checkpoints = [
+    d for d in os.listdir(full_model_path)
+    if os.path.isdir(os.path.join(full_model_path, d)) and d.startswith("checkpoint-")
+]
+
+for checkpoint in sorted(checkpoints, key=extract_step):
+    ckpt_path = os.path.join(full_model_path, checkpoint)
+
+    
 for model_dir in sorted(os.listdir(outputs_root)):
     full_model_path = os.path.join(outputs_root, model_dir)
     if not os.path.isdir(full_model_path):
@@ -64,8 +76,7 @@ for model_dir in sorted(os.listdir(outputs_root)):
 
     print(f"\n=== Model: {model_dir} ===")
 
-
-    for checkpoint in sorted(os.listdir(full_model_path)):
+    for checkpoint in sorted(checkpoints, key=extract_step):
         ckpt_path = os.path.join(full_model_path, checkpoint)
         if not os.path.isdir(ckpt_path) or not checkpoint.startswith("checkpoint-"):
             continue
