@@ -12,7 +12,7 @@ from transformers import AutoTokenizer
 from transformers import PreTrainedTokenizerFast
 
 
-def train_model(model_config_dict, training_config, run_name):
+def train_model(model_config_dict, training_config, run_name, dataname):
     # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -23,12 +23,19 @@ def train_model(model_config_dict, training_config, run_name):
     # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained("spanish_tokenizer")
 
-    # Add custom padtoken 
+    # Add custom padtoken
+    # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer))
     model.config.pad_token_id = tokenizer.pad_token_id
 
     # Set up your dataset for streaming
-    dataset = load_dataset("josecannete/large_spanish_corpus",split="train",streaming=True)
+    if "cannete" in dataname:
+      dataset = load_dataset("josecannete/large_spanish_corpus",split="train",streaming=True)
+    elif "oscar" in dataname:
+      dataset = load_dataset("oscar","unshuffled_deduplicated_es", split="train",streaming=True)
+    elif "micro" in dataname:
+      dataset = load_dataset("privru/es-micro-800", split="train", streaming=True)
+    
     dataset = dataset.shuffle(buffer_size=10_000)
 
     def tokenize(examples):
@@ -94,11 +101,11 @@ def train_model(model_config_dict, training_config, run_name):
                 checkpoint_path = os.path.join(output_dir, f"checkpoint-{step}")
                 model.save_pretrained(checkpoint_path)
                 tokenizer.save_pretrained(checkpoint_path)
-                
+
             step += 1
             if step >= training_config["max_train_steps"]:
                 print("Training complete.")
-                
+
                 return
 
 def set_seed(seed: int):
@@ -125,25 +132,27 @@ def main():
         "eos_token_id": 1
     }
 
-    with open("../config/training-config.yaml", "r") as f:
+    with open("config/training-config.yaml", "r") as f:
         training_config = yaml.safe_load(f)
 
     # Define model configurations to test
     model_variants = [
-        {"n_layer": 1, "n_head": 4, "n_embd": 512},
-        {"n_layer": 2, "n_head": 4, "n_embd": 512},
-        {"n_layer": 1, "n_head": 8, "n_embd": 512},
+        {"n_layer": 6, "n_head": 12, "n_embd": 768},
+        {"n_layer": 12, "n_head": 6, "n_embd": 768},
+        # {"n_layer": 1, "n_head": 8, "n_embd": 512},
     ]
 
     # Specify number of seeds per variant to run
-    num_seeds = 3
+    num_seeds = 1
+
+    # Specify which dataset you will train on
+    dataname = "micro"
 
     for i, variant in enumerate(model_variants):
-        
-        for s in range(num_seeds):
 
+        for s in range(num_seeds):
           # Set a different seed per variant
-          seed = random.randint(0, 10000) 
+          seed = random.randint(0, 10000)
           set_seed(seed)
 
           # Merge base config with variant
@@ -151,10 +160,10 @@ def main():
           model_config.update(variant)
 
           # Add seed to config or run name if useful
-          run_name = f"gpt_layers{variant['n_layer']}_heads{variant['n_head']}_embd{variant['n_embd']}_seed{s}_seedval{seed}"
+          run_name = f"gpt_layers{variant['n_layer']}_heads{variant['n_head']}_embd{variant['n_embd']}_seed{s}_seedval{seed}_trainset{dataname}"
           print(f"\n==== Training {run_name} with seed {seed} ====\n")
 
-          train_model(model_config, training_config, run_name)
+          train_model(model_config, training_config, run_name, dataname)
 
 if __name__ == "__main__":
     main()
