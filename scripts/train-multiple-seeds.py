@@ -95,6 +95,19 @@ def train_model(model_config_dict, training_config, run_name, dataname):
                 optimizer.zero_grad()
                 lr_scheduler.step()
 
+            def should_save(step):
+                return (
+                    step < 100 and step % 10 == 0 or
+                    step < 1000 and step % 50 == 0 or
+                    step < 10000 and step % 100 == 0 or
+                    step % 1000 == 0
+                )
+
+            if should_save(step):
+                checkpoint_path = os.path.join(output_dir, f"checkpoint-{step}")
+                model.save_pretrained(checkpoint_path)
+                tokenizer.save_pretrained(checkpoint_path)
+                
             if step % training_config["logging_steps"] == 0:
                 print(f"Step {step}: loss = {loss.item() * accumulation_steps:.4f}")
 
@@ -106,7 +119,9 @@ def train_model(model_config_dict, training_config, run_name, dataname):
             step += 1
             if step >= training_config["max_train_steps"]:
                 print("Training complete.")
-
+                final_checkpoint_path = os.path.join(output_dir, "final")
+                model.save_pretrained(final_checkpoint_path)
+                tokenizer.save_pretrained(final_checkpoint_path)
                 return
 
 def set_seed(seed: int):
@@ -138,8 +153,10 @@ def main():
 
     # Define model configurations to test
     model_variants = [
+        {"n_layer": 6, "n_head": 6, "n_embd": 768},
         {"n_layer": 6, "n_head": 12, "n_embd": 768},
         {"n_layer": 12, "n_head": 6, "n_embd": 768},
+        {"n_layer": 12, "n_head": 12, "n_embd": 768},
         # {"n_layer": 1, "n_head": 8, "n_embd": 512},
     ]
 
@@ -153,7 +170,7 @@ def main():
 
         for s in range(num_seeds):
           # Set a different seed per variant
-          seed = random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
+          seed = s # random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
           set_seed(seed)
 
           # Merge base config with variant
