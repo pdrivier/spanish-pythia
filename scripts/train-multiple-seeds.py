@@ -5,7 +5,7 @@ import yaml
 from copy import deepcopy
 import os
 
-from torch.utils.data import IterableDataset, DataLoader
+from torch.utils.data import IterableDataset, DataLoader # seems to require pip install fsspec==2023.9.2
 from transformers import GPT2Config, GPT2LMHeadModel, Trainer, TrainingArguments, DataCollatorForLanguageModeling, get_scheduler
 from datasets import load_dataset
 from transformers import AutoTokenizer
@@ -21,7 +21,7 @@ def train_model(model_config_dict, training_config, run_name, dataname):
     model = GPT2LMHeadModel(config).to(device)
 
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("spanish_tokenizer")
+    tokenizer = AutoTokenizer.from_pretrained("spanish_tokenizer") #load desired tokenizer
 
     # Add custom padtoken
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -33,8 +33,9 @@ def train_model(model_config_dict, training_config, run_name, dataname):
       dataset = load_dataset("josecannete/large_spanish_corpus",split="train",streaming=True)
     elif "oscar" in dataname:
       dataset = load_dataset("oscar","unshuffled_deduplicated_es", split="train",streaming=True)
-    elif "micro" in dataname:
-      dataset = load_dataset("privru/es-micro-800", split="train", streaming=True)
+    elif "bsc" in dataname:
+      dataset = load_dataset("BSC-LT/open_data_26B_tokens_balanced_es_ca", split="train", streaming=True)
+    
     
     dataset = dataset.shuffle(buffer_size=10_000)
 
@@ -132,7 +133,7 @@ def main():
         "eos_token_id": 1
     }
 
-    with open("config/training-config.yaml", "r") as f:
+    with open("../config/training-config.yaml", "r") as f:
         training_config = yaml.safe_load(f)
 
     # Define model configurations to test
@@ -143,16 +144,16 @@ def main():
     ]
 
     # Specify number of seeds per variant to run
-    num_seeds = 1
+    num_seeds = 3
 
     # Specify which dataset you will train on
-    dataname = "micro"
+    dataname = "cannete" #"oscar", "bsc"
 
     for i, variant in enumerate(model_variants):
 
         for s in range(num_seeds):
           # Set a different seed per variant
-          seed = random.randint(0, 10000)
+          seed = random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
           set_seed(seed)
 
           # Merge base config with variant
