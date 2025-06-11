@@ -27,6 +27,11 @@ def train_model(model_config_dict, training_config, run_name, dataname):
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     ### Resize based on size of tokenizer
     model.resize_token_embeddings(len(tokenizer))
+    
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+        print("Added pad token.")
+
     model.config.pad_token_id = tokenizer.pad_token_id
 
     # Set up your dataset for streaming
