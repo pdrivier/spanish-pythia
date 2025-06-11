@@ -21,10 +21,11 @@ def train_model(model_config_dict, training_config, run_name, dataname):
     model = GPT2LMHeadModel(config).to(device)
 
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("spanish_tokenizer") #load desired tokenizer
+    tokenizer = AutoTokenizer.from_pretrained("PlanTL-GOB-ES/gpt2-base-bne") #load desired tokenizer
 
     # Add custom padtoken
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    ### Resize based on size of tokenizer
     model.resize_token_embeddings(len(tokenizer))
     model.config.pad_token_id = tokenizer.pad_token_id
 
@@ -107,7 +108,7 @@ def train_model(model_config_dict, training_config, run_name, dataname):
                 checkpoint_path = os.path.join(output_dir, f"checkpoint-{step}")
                 model.save_pretrained(checkpoint_path)
                 tokenizer.save_pretrained(checkpoint_path)
-                
+
             if step % training_config["logging_steps"] == 0:
                 print(f"Step {step}: loss = {loss.item() * accumulation_steps:.4f}")
 
