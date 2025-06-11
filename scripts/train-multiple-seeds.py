@@ -111,6 +111,7 @@ def train_model(model_config_dict, training_config, run_name, dataname):
                 )
 
             if should_save(step):
+                print("Saving step", step)
                 checkpoint_path = os.path.join(output_dir, f"checkpoint-{step}")
                 model.save_pretrained(checkpoint_path)
                 tokenizer.save_pretrained(checkpoint_path)
@@ -118,10 +119,10 @@ def train_model(model_config_dict, training_config, run_name, dataname):
             if step % training_config["logging_steps"] == 0:
                 print(f"Step {step}: loss = {loss.item() * accumulation_steps:.4f}")
 
-            if step % training_config["save_steps"] == 0:
-                checkpoint_path = os.path.join(output_dir, f"checkpoint-{step}")
-                model.save_pretrained(checkpoint_path)
-                tokenizer.save_pretrained(checkpoint_path)
+            # if step % training_config["save_steps"] == 0:
+            #    checkpoint_path = os.path.join(output_dir, f"checkpoint-{step}")
+            #    model.save_pretrained(checkpoint_path)
+            #    tokenizer.save_pretrained(checkpoint_path)
 
             step += 1
             if step >= training_config["max_train_steps"]:
