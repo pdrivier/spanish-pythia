@@ -105,7 +105,7 @@ def train_model(model_config_dict, training_config, run_name, dataname):
             def should_save(step):
                 return (
                     step < 100 and step % 10 == 0 or
-                    step < 1000 and step % 50 == 0 or
+                    step <= 1000 and step % 50 == 0 or
                     step % 5000 == 0
                 )
 
