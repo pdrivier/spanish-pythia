@@ -106,8 +106,7 @@ def train_model(model_config_dict, training_config, run_name, dataname):
                 return (
                     step < 100 and step % 10 == 0 or
                     step < 1000 and step % 50 == 0 or
-                    step < 10000 and step % 100 == 0 or
-                    step % 1000 == 0
+                    step % 5000 == 0
                 )
 
             if should_save(step):
@@ -161,7 +160,7 @@ def main():
 
     # Define model configurations to test
     model_variants = [
-        {"n_layer": 6, "n_head": 6, "n_embd": 768},
+        # {"n_layer": 6, "n_head": 6, "n_embd": 768},
         {"n_layer": 6, "n_head": 12, "n_embd": 768},
         {"n_layer": 12, "n_head": 6, "n_embd": 768},
         {"n_layer": 12, "n_head": 12, "n_embd": 768},
