@@ -142,7 +142,7 @@ def main():
         
         for s in range(num_seeds):
           # Set a different seed per variant
-          seed = random.randint(0, 10000) 
+          seed = s # just use seed number ### random.randint(0, 10000) 
           set_seed(seed)
 
           # Merge base config with variant
