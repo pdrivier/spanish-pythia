@@ -161,10 +161,10 @@ def main():
 
     # Define model configurations to test
     model_variants = [
-        # {"n_layer": 6, "n_head": 6, "n_embd": 768},
+        {"n_layer": 6, "n_head": 6, "n_embd": 768},
         {"n_layer": 6, "n_head": 12, "n_embd": 768},
-        # {"n_layer": 12, "n_head": 6, "n_embd": 768},
-        # {"n_layer": 12, "n_head": 12, "n_embd": 768},
+        {"n_layer": 12, "n_head": 6, "n_embd": 768},
+        {"n_layer": 12, "n_head": 12, "n_embd": 768},
         # {"n_layer": 1, "n_head": 8, "n_embd": 512},
     ]
 
@@ -172,13 +172,10 @@ def main():
     num_seeds = 3
 
     # Specify which dataset you will train on
-    dataname = "cannete" #"oscar", "bsc"
+    dataname = "oscar" # one of {"cannete, "oscar", "bsc"}
 
     for i, variant in enumerate(model_variants):
         for s in range(num_seeds):
-          if s != 2:
-            print("Skipping seed 0 for this variant")
-            continue
           # Set a different seed per variant
           seed = s # random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
           set_seed(seed)
