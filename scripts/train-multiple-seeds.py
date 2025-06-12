@@ -162,9 +162,9 @@ def main():
     # Define model configurations to test
     model_variants = [
         # {"n_layer": 6, "n_head": 6, "n_embd": 768},
-        # {"n_layer": 6, "n_head": 12, "n_embd": 768},
+        {"n_layer": 6, "n_head": 12, "n_embd": 768},
         # {"n_layer": 12, "n_head": 6, "n_embd": 768},
-        {"n_layer": 12, "n_head": 12, "n_embd": 768},
+        # {"n_layer": 12, "n_head": 12, "n_embd": 768},
         # {"n_layer": 1, "n_head": 8, "n_embd": 512},
     ]
 
@@ -176,7 +176,7 @@ def main():
 
     for i, variant in enumerate(model_variants):
         for s in range(num_seeds):
-          if s == 0 and variant == {"n_layer": 12, "n_head": 6, "n_embd": 768}:
+          if s != 2:
             print("Skipping seed 0 for this variant")
             continue
           # Set a different seed per variant
