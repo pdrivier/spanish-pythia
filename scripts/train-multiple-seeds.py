@@ -172,7 +172,7 @@ def main():
     num_seeds = 3
 
     # Specify which dataset you will train on
-    dataname = "oscar" # one of {"cannete, "oscar", "bsc"}
+    dataname = "bsc" # one of {"cannete, "oscar", "bsc"}
 
     for i, variant in enumerate(model_variants):
         for s in range(num_seeds):
