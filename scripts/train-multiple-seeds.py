@@ -175,8 +175,9 @@ def main():
     dataname = "cannete" #"oscar", "bsc"
 
     for i, variant in enumerate(model_variants):
-
         for s in range(num_seeds):
+          if s == 0:
+            continue
           # Set a different seed per variant
           seed = s # random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
           set_seed(seed)
