@@ -176,7 +176,8 @@ def main():
 
     for i, variant in enumerate(model_variants):
         for s in range(num_seeds):
-          if s == 0:
+          if s == 0 and variant == {"n_layer": 12, "n_head": 6, "n_embd": 768}:
+            print("Skipping seed 0 for this variant")
             continue
           # Set a different seed per variant
           seed = s # random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
