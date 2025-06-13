@@ -161,7 +161,7 @@ def main():
 
     # Define model configurations to test
     model_variants = [
-        {"n_layer": 6, "n_head": 6, "n_embd": 768},
+        # {"n_layer": 6, "n_head": 6, "n_embd": 768},
         {"n_layer": 6, "n_head": 12, "n_embd": 768},
         {"n_layer": 12, "n_head": 6, "n_embd": 768},
         {"n_layer": 12, "n_head": 12, "n_embd": 768},
