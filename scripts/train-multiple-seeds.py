@@ -163,7 +163,7 @@ def main():
     model_variants = [
         # {"n_layer": 6, "n_head": 6, "n_embd": 768},
         # {"n_layer": 6, "n_head": 12, "n_embd": 768},
-        {"n_layer": 12, "n_head": 6, "n_embd": 768},
+        # {"n_layer": 12, "n_head": 6, "n_embd": 768},
         {"n_layer": 12, "n_head": 12, "n_embd": 768},
         # {"n_layer": 1, "n_head": 8, "n_embd": 512},
     ]
@@ -179,12 +179,7 @@ def main():
           # Set a different seed per variant
           seed = s # random.randint(0, 10000) #replace with seed = s if want seed num to match iteration num
           set_seed(seed)
-
-          if variant == {"n_layer": 12, "n_head": 6, "n_embd": 768}:
-            if s != 2:
-                continue
-
-
+          
           # Merge base config with variant
           model_config = deepcopy(base_model_config)
           model_config.update(variant)
